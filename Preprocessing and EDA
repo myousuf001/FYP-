@@ -1,0 +1,181 @@
+#Import appropriate libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# Load dataset "CSV" file
+file_path = '/Users/yousufhabib/Desktop/bank.csv'
+
+# Load the CSV file using the correct delimiter
+df = pd.read_csv(file_path, sep=';')  
+
+# Print basic info about the DataFrame
+print(df.info())  # This shows the data types and non-null counts
+
+# Display the first few rows of the dataset
+print(df.head())
+
+# Descriptive statistics
+print(df.describe())
+
+missing_values = df.isnull().sum()
+print(missing_values)
+
+duplicates = df.duplicated().sum()
+print(f"Number of duplicate rows: {duplicates}")
+
+df['age'] = df['age'].astype(int)  # For converting 'age' feature to integer
+
+
+
+# Plot age distribution
+plt.figure(figsize=(8,6))
+sns.histplot(df['age'], bins=30, kde=True)
+plt.title('Age Distribution of Customers')
+plt.show()
+
+# 1. Summary statistics for numerical variables
+numerical_summary = df.describe()
+print("Summary Statistics for Numerical Variables:")
+print(numerical_summary)
+
+# 2. Summary statistics for categorical variables
+categorical_columns = df.select_dtypes(include=['object']).columns  # Get categorical columns
+for col in categorical_columns:
+    print(f"\nValue counts for '{col}':")
+    print(df[col].value_counts())
+
+# 3. Unique values in categorical variables
+for col in categorical_columns:
+    unique_values = df[col].unique()
+    print(f"\nUnique values in '{col}': {unique_values}")
+
+# 4. Distribution of numerical variables
+plt.figure(figsize=(12, 8))
+for i, col in enumerate(df.select_dtypes(include=['float64', 'int64']).columns, 1):
+    plt.subplot(3, 4, i)  # Adjust the number of subplots based on your columns
+    sns.histplot(df[col], bins=30, kde=True)
+    plt.title(f'Distribution of {col}')
+    plt.xlabel(col)
+    plt.ylabel('Frequency')
+plt.tight_layout()
+plt.show()
+
+# Box plots for numerical variables
+plt.figure(figsize=(12, 8))
+for i, col in enumerate(df.select_dtypes(include=['float64', 'int64']).columns, 1):
+    plt.subplot(3, 4, i)
+    sns.boxplot(x=df[col])
+    plt.title(f'Boxplot of {col}')
+plt.tight_layout()
+plt.show()
+
+# Term Deposit Subscription by job category
+plt.figure(figsize=(12, 6))
+sns.countplot(data=df, x='job', hue='y')
+plt.title('Term Deposit Subscriptions by Job Category')
+plt.xlabel('Job Category')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.legend(title='Subscribed', labels=['No', 'Yes'])
+plt.show()
+
+# Term Deposit Subscription by marital status
+plt.figure(figsize=(12, 6))
+sns.countplot(data=df, x='marital', hue='y')
+plt.title('Term Deposit Subscriptions by Marital Status')
+plt.xlabel('Marital Status')
+plt.ylabel('Count')
+plt.legend(title='Subscribed', labels=['No', 'Yes'])
+plt.show()
+
+# Term Deposit Subscription by Education Level
+plt.figure(figsize=(12, 6))
+sns.countplot(data=df, x='education', hue='y')
+plt.title('Term Deposit Subscriptions by Education Level')
+plt.xlabel('Education Level')
+plt.ylabel('Count')
+plt.legend(title='Subscribed', labels=['No', 'Yes'])
+plt.show()
+
+# Term Deposit Subscription by Loan Status
+plt.figure(figsize=(12, 6))
+sns.countplot(data=df, x='loan', hue='y')
+plt.title('Term Deposit Subscriptions by Loan Status')
+plt.xlabel('Loan Status')
+plt.ylabel('Count')
+plt.legend(title='Subscribed', labels=['No', 'Yes'])
+plt.show()
+
+
+# Bar Graph of Age Distribtuion by Subscription Status
+plt.figure(figsize=(10, 6))
+sns.histplot(data=df, x='age', hue='y', bins=30, kde=True, palette="Set1")
+plt.title("Age Distribution by Subscription Status")
+plt.xlabel("Age")
+plt.ylabel("Count")
+plt.show()
+
+
+# Boxplot showing Term Deposit Subscription by Duration of Contact
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=df, x='y', y='duration')
+plt.title('Duration of Contact by Subscription Status')
+plt.xlabel('Subscribed')
+plt.ylabel('Duration')
+plt.xticks(ticks=[0, 1], labels=['No', 'Yes'])
+plt.show()
+
+
+# Term Deposit Subscription by Account Balance
+plt.figure(figsize=(12, 12))
+sns.boxplot(data=df, x='y', y='balance')
+plt.title('Account Balance by Subscription Status')
+plt.xlabel('Subscribed')
+plt.ylabel('Balance')
+plt.xticks(ticks=[0, 1], labels=['No', 'Yes'])
+plt.show()
+
+#Distribution of Term Deposit Subscription
+sns.countplot(data=df, x='y', palette="Set2")
+plt.title("Distribution of Term Deposit Subscriptions")
+plt.xlabel("Subscribed (Yes/No)")
+plt.ylabel("Count")
+plt.show()
+
+# Distribution of Numerical Feature
+df.hist(figsize=(12, 8), bins=30, color='skyblue', edgecolor='black')
+plt.suptitle("Distribution of Numerical Features", fontsize=16)
+plt.show()
+
+#Boxplot to Detect Outliers in Numerical Feature
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=df[['age', 'balance', 'duration', 'campaign']], palette="coolwarm")
+plt.title("Boxplot of Numerical Features (Detecting Outliers)")
+plt.show()
+
+# Rate of Subscription by each month of the year
+plt.figure(figsize=(10, 5))
+sns.countplot(data=df, x='month', hue='y', palette="coolwarm", order=df['month'].value_counts().index)
+plt.title("Subscription Rate by Month")
+plt.xlabel("Month")
+plt.ylabel("Count")
+plt.show()
+
+# Generate the correlation heatmap
+plt.figure(figsize=(12, 8))
+sns.heatmap(numeric_df.corr(), annot=True, fmt=".2f", cmap='coolwarm', linewidths=0.5)
+plt.title("Correlation Heatmap of Features")
+plt.show()
+
+# Pairplot for Relationships
+sns.pairplot(df, hue='y', diag_kind='kde', corner=True)
+plt.show()
+
+
+
+
+
+
+
