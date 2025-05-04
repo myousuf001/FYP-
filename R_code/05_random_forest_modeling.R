@@ -5,6 +5,13 @@ print(paste("AUC Score:", round(auc_score, 4)))
 # Fine-tuning logisitc regression model
 
 set.seed(123)
+# Create model matrices for glmnet (excluding intercept)
+train_x <- model.matrix(y ~ . -1, data = train_data)
+test_x <- model.matrix(y ~ . -1, data = test_data)
+
+# Target variables
+train_y <- train_data$y
+test_y <- test_data$y
 cv_model <- cv.glmnet(train_x, train_y, alpha = 0.5, family = "binomial")  # Elastic Net
 best_lambda <- cv_model$lambda.1se  # Optimal Lambda
 print(paste("Best Lambda:", best_lambda))
