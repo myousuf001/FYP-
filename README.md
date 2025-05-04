@@ -32,13 +32,21 @@ This project aims to analyse customer data from a Portuguese banking institution
 
   ├── 📂 week5_model_building_python.ipynb
 
-├── 📂 r_scripts
+├── 📂 r_code
 
-  │ ├── data_import_and_cleaning.R
+  │ ├── 01_data_loading_cleaning.R
   
-  │ ├── eda_visualization.R
+  │ ├── 02_exploratory_analysis.R
+
+  │ ├── 03_feature_engineering.R
+
+  │ ├── 04_logistic_regression.R
+
+  │ ├── 05_random_forest_modeling.R
   
-  │ ├── modeling_logistic_randomforest.R
+  │ ├── 06_feature_importance.R
+
+  │ ├── FYP_Bank_Analysis.R
   
 ├── 📂 figures
 
