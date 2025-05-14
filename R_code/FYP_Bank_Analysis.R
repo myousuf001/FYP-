@@ -224,34 +224,41 @@ auc_score <- auc(roc_curve)
 print(paste("AUC Score:", round(auc_score, 4)))
 
 
-# Fine tuning Random Forest Model
+# 📌 Fine-Tuning Random Forest Model
 
 # Set seed for reproducibility
 set.seed(123)
 
 # Train the fine-tuned Random Forest Model with mtry = 3
-rf_tuned <- randomForest(y ~ ., data=train_data, ntree=300, mtry=3, importance=TRUE)
+rf_tuned <- randomForest(y ~ ., data = train_data, ntree = 300, mtry = 3, importance = TRUE)
 
 # Print model summary
 print(rf_tuned)
 
-# Make Predictions
-pred_probs_rf <- predict(rf_tuned, test_data, type="prob")[,2]
-pred_classes_rf <- predict(rf_tuned, test_data, type="class")
+# Make Probability Predictions
+pred_probs_rf <- predict(rf_tuned, test_data, type = "prob")[,2]
 
-# Compute Confusion Matrix
-conf_matrix_rf <- table(Predicted=pred_classes_rf, Actual=test_data$y)
+# Adjusted threshold (from 0.5 to 0.25) to increase recall
+pred_classes_rf <- ifelse(pred_probs_rf > 0.25, 1, 0)
+
+# Confusion Matrix
+conf_matrix_rf <- table(Predicted = pred_classes_rf, Actual = test_data$y)
 print(conf_matrix_rf)
+
+# Calculate Recall
+TP <- conf_matrix_rf["1", "1"]
+FN <- conf_matrix_rf["0", "1"]
+recall <- TP / (TP + FN)
+print(paste("Recall:", round(recall, 4)))
 
 # Calculate Accuracy
 accuracy_rf <- sum(diag(conf_matrix_rf)) / sum(conf_matrix_rf)
 print(paste("Accuracy:", round(accuracy_rf, 4)))
 
 # Compute ROC Curve and AUC Score
-roc_curve_rf <- roc(test_data$y, as.numeric(pred_probs_rf))
-plot(roc_curve_rf, main="ROC Curve for Fine-Tuned Random Forest", col="blue")
+roc_curve_rf <- roc(test_data$y, pred_probs_rf)
+plot(roc_curve_rf, main = "ROC Curve for Fine-Tuned Random Forest (Threshold 0.25)", col = "blue")
 
-# Compute AUC Score
 auc_score_rf <- auc(roc_curve_rf)
 print(paste("AUC Score:", round(auc_score_rf, 4)))
 
